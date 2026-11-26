@@ -1,4 +1,4 @@
-# Lower-bound lane (Flutter 3.32) only; see ../pubspec_overrides.yaml.
+# Flutter 3.32 (the tested line and the only CI lane); see ../pubspec_overrides.yaml.
 dependency_overrides:
   firebase_ai: 3.4.0
   chat_branches:
