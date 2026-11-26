@@ -2,7 +2,7 @@
 
 **English** | [한국어](README.ko.md)
 
-Keep every edited question and regenerated answer as a switchable branch (`< 2/3 >`) in Flutter AI Toolkit chats. `chat_branches` wraps the `LlmProvider` you already use, so editing a question no longer throws the old question and answer away, and the whole conversation tree can be saved and restored as JSON. It also ships a pure-Dart conversation tree that works without Flutter.
+Keep every edited question and regenerated answer as a switchable branch (`< 2/3 >`) in Flutter AI Toolkit chats. `chat_branches` wraps the `LlmProvider` you already use, so editing a question no longer throws the old question and answer away, and the whole conversation tree can be saved and restored as JSON. It also ships a conversation tree that imports no Flutter code (installing the package still needs the Flutter SDK).
 
 ![The example app in English: the chat_branches example title, the yellow practice-mock notice, the Keep branches switch and an empty chat](https://raw.githubusercontent.com/LeeGyeongPil/chat-branches/main/docs/images/example-welcome.png)
 
@@ -23,9 +23,9 @@ dependencies:
       url: https://github.com/LeeGyeongPil/chat-branches
 ```
 
-Requires Flutter 3.29 or newer (the first release that ships Dart 3.7), and `flutter_ai_toolkit` 1.x. Versions actually tested: Flutter 3.32.4 with toolkit 1.0.0 (with the override below), and CI on the latest stable Flutter. If you do not have Flutter yet, see the [install guide](https://docs.flutter.dev/get-started/install). The only runtime dependencies are Flutter and `flutter_ai_toolkit`.
+Requires Flutter 3.29 or newer (the first release that ships Dart 3.7), and `flutter_ai_toolkit` 1.x. Versions actually tested: Flutter 3.32.4 with toolkit 1.0.0 (with the override below), and CI on Flutter 3.32.x stable (the same combination). If you do not have Flutter yet, see the [install guide](https://docs.flutter.dev/get-started/install). The only runtime dependencies are Flutter and `flutter_ai_toolkit`.
 
-On an older Flutter (for example 3.32) a recent `firebase_ai` 3.x, which the toolkit pulls in, can fail to compile with an `@internal` error in `live_session.dart`. Either use the latest stable Flutter, or pin the older release in your app's `pubspec.yaml`:
+On an older Flutter (for example 3.32) a recent `firebase_ai` 3.x, which the toolkit pulls in, can fail to compile with an `@internal` error in `live_session.dart`. Pin the older release in your app's `pubspec.yaml` (this is the combination that was tested; newer Flutter releases were not tested):
 
 ```yaml
 dependency_overrides:
@@ -188,7 +188,7 @@ JSON v1 (what `toJson` writes, shown in usage example 1):
 
 ## Usage examples
 
-### 1. Use the tree without Flutter
+### 1. Use the tree without importing Flutter
 
 ```dart
 import 'dart:convert';
@@ -286,14 +286,14 @@ The example uses a **practice mock** (based on `EchoProvider`): it repeats your 
 ## Compatibility
 
 - Follows [Semantic Versioning](https://semver.org/). During 0.x the API can change in a minor version; changes are listed in [CHANGELOG.md](CHANGELOG.md).
-- Tested with `flutter_ai_toolkit` 1.0.0 on Flutter 3.32.4, which needs the `firebase_ai: 3.4.0` override shown under Install. CI also runs a lane on the latest stable Flutter and toolkit 1.2.x. The declared lower bound is Flutter 3.29 (the first with Dart 3.7); Flutter 3.29 itself was not tested.
+- Tested with `flutter_ai_toolkit` 1.0.0 on Flutter 3.32.4, which needs the `firebase_ai: 3.4.0` override shown under Install. CI runs one lane: Flutter 3.32.x stable with the override. Toolkit 1.2.0 was not run; its source was compared and the interfaces the package uses are identical. The declared lower bound is Flutter 3.29 (the first with Dart 3.7); Flutter 3.29 itself was not tested.
 - Edit and cancel handling relies on how the toolkit's chat view uses `history`, which holds for toolkit 1.0.0 to 1.2.0 (checked in source).
 
 ## Troubleshooting
 
 - **`BranchBusyException`**: you switched, edited or regenerated while an answer was streaming. Wait for the stream to end, or disable your controls while `isStreaming` is true.
 - **The app seems stuck "streaming" after a manual call**: the stream returned by `sendMessageStream`, `regenerate` or `editAt` was never listened to. Listen to it (`await stream.drain<void>()`).
-- **`TreeFormatException: version ...`**: the JSON is from another format or version; this release reads `chat_branches` version 1 only.
+- **`FormatException: Invalid chat_branches JSON at "version"`**: the JSON is from another format or version; this release reads `chat_branches` version 1 only. The exception thrown is a `TreeFormatException`, which is a `FormatException`.
 - **`flutter pub get` fails behind a proxy or offline**: that is the package manager reaching pub.dev, not this package; set `PUB_HOSTED_URL` to a mirror you can reach.
 
 ## Development
@@ -301,7 +301,8 @@ The example uses a **practice mock** (based on `EchoProvider`): it repeats your 
 ```bash
 flutter analyze
 flutter test
-cd example && flutter test
+# optional, also checks the example app:
+(cd example && flutter test)
 ```
 
 ```text

@@ -2,7 +2,7 @@
 
 [English](README.md) | **한국어**
 
-Flutter AI Toolkit 채팅에서 고친 질문과 다시 만든 답변을 모두 갈래(`< 2/3 >`)로 남겨 서로 넘나들 수 있게 합니다. 이미 쓰는 `LlmProvider` 를 감싸기만 하면 질문을 고쳐도 이전 질문·답변 쌍이 사라지지 않고, 대화 트리 전체를 JSON 으로 저장·복원할 수 있습니다. Flutter 없이 쓰는 순수 Dart 대화 트리도 함께 들어 있습니다.
+Flutter AI Toolkit 채팅에서 고친 질문과 다시 만든 답변을 모두 갈래(`< 2/3 >`)로 남겨 서로 넘나들 수 있게 합니다. 이미 쓰는 `LlmProvider` 를 감싸기만 하면 질문을 고쳐도 이전 질문·답변 쌍이 사라지지 않고, 대화 트리 전체를 JSON 으로 저장·복원할 수 있습니다. Flutter 코드를 import 하지 않는 대화 트리도 함께 들어 있습니다(패키지 설치에는 Flutter SDK 가 필요합니다).
 
 ![한국어 예제 앱: chat_branches 예제 제목, 노란 연습용 목 안내, 갈래 유지 스위치, 빈 채팅](https://raw.githubusercontent.com/LeeGyeongPil/chat-branches/main/docs/images/example-welcome.ko.png)
 
@@ -23,9 +23,9 @@ dependencies:
       url: https://github.com/LeeGyeongPil/chat-branches
 ```
 
-Flutter 3.29 이상(Dart 3.7 을 싣는 첫 버전)과 `flutter_ai_toolkit` 1.x 가 필요합니다. 실제로 시험한 버전: Flutter 3.32.4 + 툴킷 1.0.0(아래 override 필요), CI 는 최신 stable Flutter. Flutter 가 없다면 [설치 안내](https://docs.flutter.dev/get-started/install)를 보세요. 런타임 의존성은 Flutter 와 `flutter_ai_toolkit` 뿐입니다.
+Flutter 3.29 이상(Dart 3.7 을 싣는 첫 버전)과 `flutter_ai_toolkit` 1.x 가 필요합니다. 실제로 시험한 버전: Flutter 3.32.4 + 툴킷 1.0.0(아래 override 필요), CI 는 Flutter 3.32.x stable(같은 조합). Flutter 가 없다면 [설치 안내](https://docs.flutter.dev/get-started/install)를 보세요. 런타임 의존성은 Flutter 와 `flutter_ai_toolkit` 뿐입니다.
 
-구 Flutter(예: 3.32)에서는 툴킷이 끌어오는 최신 `firebase_ai` 3.x 가 `live_session.dart` 의 `@internal` 오류로 컴파일되지 않을 수 있습니다. 최신 stable Flutter 를 쓰거나, 앱의 `pubspec.yaml` 에 이전 릴리스를 고정하세요.
+구 Flutter(예: 3.32)에서는 툴킷이 끌어오는 최신 `firebase_ai` 3.x 가 `live_session.dart` 의 `@internal` 오류로 컴파일되지 않을 수 있습니다. 앱의 `pubspec.yaml` 에 이전 릴리스를 고정하세요(시험한 조합입니다. 더 최신 Flutter 는 시험하지 않았습니다).
 
 ```yaml
 dependency_overrides:
@@ -188,7 +188,7 @@ JSON v1(`toJson` 이 쓰는 형식, 사용 예 1 에 출력이 있습니다):
 
 ## 사용 예
 
-### 1. Flutter 없이 트리만 쓰기
+### 1. Flutter 를 import 하지 않고 트리만 쓰기
 
 ```dart
 import 'dart:convert';
@@ -286,14 +286,14 @@ flutter run -d web-server --web-port 8080
 ## 버전·호환성
 
 - [유의적 버전](https://semver.org/lang/ko/)을 따릅니다. 0.x 동안은 마이너 버전에서 API 가 바뀔 수 있고, 바뀌면 [CHANGELOG.md](CHANGELOG.md) 에 적습니다.
-- Flutter 3.32.4 의 `flutter_ai_toolkit` 1.0.0 에서 테스트했고, 설치 절의 `firebase_ai: 3.4.0` override 가 필요했습니다. 선언한 하한은 Flutter 3.29(Dart 3.7 을 싣는 첫 버전)이며, 3.29 자체는 시험하지 않았습니다. CI 는 최신 stable Flutter 와 툴킷 1.2.x 줄도 돌립니다.
+- Flutter 3.32.4 의 `flutter_ai_toolkit` 1.0.0 에서 테스트했고, 설치 절의 `firebase_ai: 3.4.0` override 가 필요했습니다. 선언한 하한은 Flutter 3.29(Dart 3.7 을 싣는 첫 버전)이며, 3.29 자체는 시험하지 않았습니다. CI 는 Flutter 3.32.x stable + override 한 줄만 돌립니다. 툴킷 1.2.0 은 실행하지 않았고, 소스를 비교해 사용하는 인터페이스가 같음을 확인했습니다.
 - 편집·취소 처리는 툴킷 채팅 화면이 `history` 를 쓰는 방식에 기댑니다. 툴킷 1.0.0~1.2.0 에서 성립함을 소스로 확인했습니다.
 
 ## 문제 해결
 
 - **`BranchBusyException`**: 답변이 스트리밍되는 중에 전환·편집·재생성했습니다. 스트림이 끝나길 기다리거나 `isStreaming` 이 true 인 동안 컨트롤을 비활성화하세요.
 - **직접 부른 뒤 계속 "스트리밍 중"으로 보임**: `sendMessageStream`, `regenerate`, `editAt` 이 돌려준 스트림을 구독하지 않았습니다. 구독하세요(`await stream.drain<void>()`).
-- **`TreeFormatException: version ...`**: 다른 형식이나 버전의 JSON 입니다. 이 릴리스는 `chat_branches` 버전 1 만 읽습니다.
+- **`FormatException: Invalid chat_branches JSON at "version"`**: 다른 형식이나 버전의 JSON 입니다. 이 릴리스는 `chat_branches` 버전 1 만 읽습니다. 던져지는 것은 `FormatException` 의 하위 타입인 `TreeFormatException` 입니다.
 - **프록시 뒤나 오프라인에서 `flutter pub get` 실패**: 이 패키지가 아니라 패키지 관리자가 pub.dev 에 닿지 못한 것입니다. 닿을 수 있는 미러를 `PUB_HOSTED_URL` 로 지정하세요.
 
 ## 개발
@@ -301,7 +301,8 @@ flutter run -d web-server --web-port 8080
 ```bash
 flutter analyze
 flutter test
-cd example && flutter test
+# 선택, 예제 앱까지 확인:
+(cd example && flutter test)
 ```
 
 ```text
