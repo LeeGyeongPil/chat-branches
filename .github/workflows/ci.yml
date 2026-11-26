@@ -1,0 +1,43 @@
+# No keys or models needed: tests use the toolkit's EchoProvider and a fake provider.
+name: ci
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1"   # weekly: catch SDK or dependency drift
+  workflow_dispatch:
+jobs:
+  lower-bound:
+    # Oldest Flutter line we test; firebase_ai is pinned by pubspec_overrides.yaml.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.32.x
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+      - run: flutter pub get
+        working-directory: example
+      - run: flutter test
+        working-directory: example
+  latest-stable:
+    # Newest stable Flutter with the newest allowed flutter_ai_toolkit: drop the pins.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: rm -f pubspec_overrides.yaml example/pubspec_overrides.yaml
+      - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+      - run: flutter pub get
+        working-directory: example
+      - run: flutter test
+        working-directory: example
