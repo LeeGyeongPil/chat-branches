@@ -1,0 +1,23 @@
+name: chat_branches_example
+description: Example app for chat_branches (practice mock, no AI model is called).
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.29.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  chat_branches:
+    path: ../
+  flutter_ai_toolkit: ">=1.0.0 <2.0.0"
+  shared_preferences: ^2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

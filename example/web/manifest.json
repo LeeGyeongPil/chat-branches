@@ -1,0 +1,11 @@
+{
+  "name": "chat_branches example",
+  "short_name": "chat_branches",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#3F51B5",
+  "description": "Branching chat history for Flutter AI Toolkit (practice mock).",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false
+}
