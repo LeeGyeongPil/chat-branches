@@ -1,0 +1,13 @@
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+coverage/
+pubspec.lock
+example/pubspec.lock
+example/.dart_tool/
+example/build/
+docs/
+# Lower-bound CI pins (firebase_ai 3.4.0); users of the package must not get them.
+pubspec_overrides.yaml
+example/pubspec_overrides.yaml

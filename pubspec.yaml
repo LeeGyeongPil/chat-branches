@@ -1,0 +1,28 @@
+name: chat_branches
+description: >-
+  Keep every edited question and regenerated answer as a switchable branch
+  ("< 2/3 >") in Flutter AI Toolkit chats. Wraps any LlmProvider; includes a
+  pure-Dart conversation tree with JSON save and restore.
+version: 0.1.0
+homepage: https://github.com/LeeGyeongPil/chat-branches
+repository: https://github.com/LeeGyeongPil/chat-branches
+issue_tracker: https://github.com/LeeGyeongPil/chat-branches/issues
+topics:
+  - chat
+  - llm
+  - ai
+  - conversation
+  - flutter-ai-toolkit
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.29.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_ai_toolkit: ">=1.0.0 <2.0.0"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

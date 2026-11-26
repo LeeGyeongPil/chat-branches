@@ -1,0 +1,4 @@
+# Lower-bound lane only (Flutter 3.32): newer firebase_ai releases do not compile
+# there. Not published (see .pubignore); CI deletes it for the latest-stable lane.
+dependency_overrides:
+  firebase_ai: 3.4.0
